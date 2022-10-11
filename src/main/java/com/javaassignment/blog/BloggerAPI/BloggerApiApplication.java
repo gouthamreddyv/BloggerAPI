@@ -15,4 +15,6 @@ public class BloggerApiApplication {
 	public RestTemplate getRestTemplate() {
 		return new RestTemplate();
 	}
+
+
 }

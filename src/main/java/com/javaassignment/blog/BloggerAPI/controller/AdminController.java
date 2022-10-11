@@ -2,6 +2,7 @@ package com.javaassignment.blog.BloggerAPI.controller;
 
 import com.javaassignment.blog.BloggerAPI.APIException;
 import com.javaassignment.blog.BloggerAPI.model.AdminResponse;
+import com.javaassignment.blog.BloggerAPI.model.BlogPostReq;
 import com.javaassignment.blog.BloggerAPI.model.BlogPostRes;
 import com.javaassignment.blog.BloggerAPI.model.PostDtls;
 import com.javaassignment.blog.BloggerAPI.service.AdminService;
@@ -25,8 +26,8 @@ public class AdminController {
     }
 
     @PostMapping(value = "/post")
-    public BlogPostRes createPost(@RequestBody PostDtls postDtls) throws APIException {
-        return adminService.savePost(postDtls);
+    public BlogPostRes createPost(@RequestBody BlogPostReq blogPostReq) throws APIException {
+        return adminService.savePost(blogPostReq);
     }
 
 }

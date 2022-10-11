@@ -8,6 +8,7 @@ import com.javaassignment.blog.BloggerAPI.APIException;
 import com.javaassignment.blog.BloggerAPI.model.*;
 import com.javaassignment.blog.BloggerAPI.repository.PostDtlsRepository;
 import lombok.extern.java.Log;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @Log
 @PropertySource("classpath:application.properties")
+
 public class AdminService {
     @Autowired
     private Environment env;
@@ -62,13 +64,13 @@ public class AdminService {
         return prepareResponse(users, posts);
     }
 
-    public BlogPostRes savePost(PostDtls postDtls) throws APIException {
-        PostDtls postObj = postDtlsRepository.save(postDtls);
+    public BlogPostRes savePost(BlogPostReq blogPostReq ) throws APIException {
+        ModelMapper modelMapper = new ModelMapper();
+        postWithURI(blogPostReq);
+        PostDtls postObj = postDtlsRepository.save(modelMapper.map(blogPostReq,PostDtls.class));
         log.info("Object saved with id" + postObj.getId());
-        BlogPostRes response = new BlogPostRes(postObj.getId(), postObj.getUserId(), postObj.getTitle(), postObj.getBody());
-        return new BlogPostRes(postObj.getId(), postObj.getUserId(), postObj.getTitle(), postObj.getBody());
+        return modelMapper.map(postObj, BlogPostRes.class);
     }
-
     private List<AdminResponse> prepareResponse(List<User> userList, List<Post> postlist) {
 
         List<AdminResponse> finallist = new ArrayList<>();
@@ -99,11 +101,11 @@ public class AdminService {
         return response.getBody().toString();
     }
 
-    private void postWithURI(PostDtls postObj) throws APIException {
+    private void postWithURI(BlogPostReq blogPostReq) throws APIException {
 
         ResponseEntity response = null;
         try {
-            response = restTemplate.postForEntity(new URL(env.getProperty("post_uri")).toString(), postObj, PostDtls.class);
+            response = restTemplate.postForEntity(new URL(env.getProperty("post_uri")).toString(), blogPostReq, BlogPostReq.class);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             throw new APIException("Technical issue plz try again");

@@ -2,6 +2,7 @@ package com.javaassignment.blog.BloggerAPI;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaassignment.blog.BloggerAPI.controller.AdminController;
+import com.javaassignment.blog.BloggerAPI.model.BlogPostReq;
 import com.javaassignment.blog.BloggerAPI.model.BlogPostRes;
 import com.javaassignment.blog.BloggerAPI.model.PostDtls;
 import com.javaassignment.blog.BloggerAPI.service.AdminService;
@@ -67,7 +68,7 @@ public class AdminControllerTest {
                 .title("title")
                 .body("body")
                 .build();
-        Mockito.when(adminService.savePost(Mockito.any(PostDtls.class))).thenReturn(blogPostRes);
+        Mockito.when(adminService.savePost(Mockito.any(BlogPostReq.class))).thenReturn(blogPostRes);
 
         ResultActions response = mockMvc.perform(MockMvcRequestBuilders.post("/api/post")
                         .contentType(MediaType.APPLICATION_JSON)
