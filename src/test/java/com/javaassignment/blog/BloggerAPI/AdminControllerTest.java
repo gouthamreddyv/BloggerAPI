@@ -56,7 +56,6 @@ public class AdminControllerTest {
                         MockMvcRequestBuilders.get("/api/posts")
                 )
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
-
     }
 
     @Test
