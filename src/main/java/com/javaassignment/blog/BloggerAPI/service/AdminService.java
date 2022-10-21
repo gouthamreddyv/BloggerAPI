@@ -24,8 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Log
-@PropertySource("classpath:application.properties")
-
+//@PropertySource("classpath:application.properties")
 public class AdminService {
     @Autowired
     private Environment env;
@@ -37,11 +36,10 @@ public class AdminService {
     public List<AdminResponse> getAllPostsWithUser() throws APIException {
 
         log.info("calling API for users ");
-        String userdtls = getResponseFromAPI(env.getProperty("user_list_uri"));
         ObjectMapper mapper = new ObjectMapper();
         List<User> users = null;
         try {
-            users = mapper.readValue(userdtls, new TypeReference<List<User>>() {
+            users = mapper.readValue(getResponseFromAPI(env.getProperty("user_list_uri")), new TypeReference<List<User>>() {
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -49,10 +47,9 @@ public class AdminService {
         }
 
         log.info("calling API for posts ");
-        String postdtls = getResponseFromAPI(env.getProperty("post_uri"));
         List<Post> posts = null;
         try {
-            posts = mapper.readValue(postdtls, new TypeReference<List<Post>>() {
+             posts  = mapper.readValue(getResponseFromAPI(env.getProperty("post_uri")), new TypeReference<List<Post>>() {
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -66,7 +63,7 @@ public class AdminService {
 
     public BlogPostRes savePost(BlogPostReq blogPostReq ) throws APIException {
         ModelMapper modelMapper = new ModelMapper();
-        postWithURI(blogPostReq);
+        postWithURI(blogPostReq,env.getProperty("post_uri"));
         PostDtls postObj = postDtlsRepository.save(modelMapper.map(blogPostReq,PostDtls.class));
         log.info("Object saved with id" + postObj.getId());
         return modelMapper.map(postObj, BlogPostRes.class);
@@ -85,7 +82,6 @@ public class AdminService {
         return finallist;
     }
 
-
     private String getResponseFromAPI(String uri) throws APIException {
 
         ResponseEntity response = null;
@@ -101,11 +97,11 @@ public class AdminService {
         return response.getBody().toString();
     }
 
-    private void postWithURI(BlogPostReq blogPostReq) throws APIException {
+    private void postWithURI(BlogPostReq blogPostReq,String uri) throws APIException {
 
         ResponseEntity response = null;
         try {
-            response = restTemplate.postForEntity(new URL(env.getProperty("post_uri")).toString(), blogPostReq, BlogPostReq.class);
+            response = restTemplate.postForEntity(new URL(uri).toString(), blogPostReq, BlogPostReq.class);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             throw new APIException("Technical issue plz try again");

@@ -6,12 +6,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "tbl_PostDetails")
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
 @Builder
-
+@AllArgsConstructor
 public class PostDtls {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "increment")

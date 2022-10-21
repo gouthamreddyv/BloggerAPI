@@ -8,7 +8,6 @@ import com.javaassignment.blog.BloggerAPI.service.AdminService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +35,7 @@ public class AdminController {
         return adminService.savePost(blogPostReq);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+   /* @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
@@ -47,6 +46,6 @@ public class AdminController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
-    }
+    }*/
 
 }
