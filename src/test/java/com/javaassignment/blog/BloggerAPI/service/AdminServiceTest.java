@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,9 +32,15 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = JacksonAutoConfiguration.class)
-@TestPropertySource("classpath:application.properties")
+@TestPropertySource(locations="classpath:application-test.properties")
 @ActiveProfiles("test")
 public class AdminServiceTest {
+
+    @Value("${user_list_uri}")
+    private String user_list_uri;
+
+    @Value("${post_uri}")
+    private String post_uri;
 
     @MockBean
     private PostDtlsRepository postDtlsRepository;
@@ -51,6 +58,8 @@ public class AdminServiceTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        System.out.println("++++++++++++++++++++++++++"+user_list_uri);
+        System.out.println("++++++++++++++++++++++++++"+post_uri);
     }
 
     @Test
@@ -131,10 +140,10 @@ public class AdminServiceTest {
 
         ResponseEntity<String> usrResp = new ResponseEntity<>(userList, HttpStatus.OK);
         ResponseEntity<String> postResp = new ResponseEntity<>(postList, HttpStatus.OK);
-        Mockito.when(restTemplate.getForEntity(Mockito.eq("https://jsonplaceholder.typicode.com/users"),Mockito.eq(String.class))).thenReturn(usrResp);
-        Mockito.when(restTemplate.getForEntity(Mockito.eq("https://jsonplaceholder.typicode.com/posts"),Mockito.eq(String.class))).thenReturn(postResp);
-        Mockito.when(env.getProperty("user_list_uri")).thenReturn("https://jsonplaceholder.typicode.com/users");
-        Mockito.when(env.getProperty("post_uri")).thenReturn("https://jsonplaceholder.typicode.com/posts");
+        Mockito.when(restTemplate.getForEntity(Mockito.eq(user_list_uri),Mockito.eq(String.class))).thenReturn(usrResp);
+        Mockito.when(restTemplate.getForEntity(Mockito.eq(post_uri),Mockito.eq(String.class))).thenReturn(postResp);
+        Mockito.when(env.getProperty("user_list_uri")).thenReturn(user_list_uri);
+        Mockito.when(env.getProperty("post_uri")).thenReturn(post_uri);
         List<AdminResponse> finallist =adminService.getAllPostsWithUser();
         assertNotNull(finallist);
 
@@ -144,8 +153,8 @@ public class AdminServiceTest {
         assertEquals(finallist.get(1).getUser().getId().intValue(),finallist.get(1).getPostList().get(0).getUserId());
         assertNotNull(finallist.get(1).getPostList());
 
-        verify(restTemplate).getForEntity("https://jsonplaceholder.typicode.com/users", String.class);
-        verify(restTemplate).getForEntity("https://jsonplaceholder.typicode.com/posts", String.class);
+        verify(restTemplate).getForEntity(user_list_uri, String.class);
+        verify(restTemplate).getForEntity(post_uri, String.class);
         verify(env).getProperty("user_list_uri");
         verify(env).getProperty("post_uri");
 
@@ -168,7 +177,7 @@ public class AdminServiceTest {
         ResponseEntity<BlogPostReq> respEntity = new ResponseEntity<>(blogPostReq, HttpStatus.OK);
         Mockito.when(postDtlsRepository.save(Mockito.any(PostDtls.class))).thenReturn(postDtls);
         Mockito.when(restTemplate.postForEntity(Mockito.any(String.class),Mockito.any(BlogPostReq.class),Mockito.eq(BlogPostReq.class))).thenReturn(respEntity);
-        Mockito.when(env.getProperty("post_uri")).thenReturn("https://jsonplaceholder.typicode.com/posts");
+        Mockito.when(env.getProperty("post_uri")).thenReturn(post_uri);
 
         BlogPostRes blogPostRes =adminService.savePost(blogPostReq);
         assertEquals(blogPostRes.getUserId(),blogPostReq.getUserId());
@@ -176,7 +185,7 @@ public class AdminServiceTest {
         assertEquals(blogPostRes.getBody(),blogPostReq.getBody());
         assertNotNull(blogPostRes.getId());
         verify(postDtlsRepository).save(postDtls);
-        verify(restTemplate).postForEntity("https://jsonplaceholder.typicode.com/posts", blogPostReq, BlogPostReq.class);
+        verify(restTemplate).postForEntity(post_uri, blogPostReq, BlogPostReq.class);
         verify(env).getProperty("post_uri");
 
     }

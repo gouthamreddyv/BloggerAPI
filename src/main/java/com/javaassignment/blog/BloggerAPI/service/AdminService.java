@@ -10,6 +10,7 @@ import com.javaassignment.blog.BloggerAPI.repository.PostDtlsRepository;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Log
-//@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.properties")
 public class AdminService {
     @Autowired
     private Environment env;
