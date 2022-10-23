@@ -1,4 +1,4 @@
-package com.javaassignment.blog.BloggerAPI;
+package com.javaassignment.blog.BloggerAPI.exception;
 
 public class APIException extends Exception
 {

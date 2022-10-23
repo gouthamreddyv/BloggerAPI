@@ -1,6 +1,6 @@
 package com.javaassignment.blog.BloggerAPI.service;
 
-import com.javaassignment.blog.BloggerAPI.APIException;
+import com.javaassignment.blog.BloggerAPI.exception.APIException;
 import com.javaassignment.blog.BloggerAPI.model.AdminResponse;
 import com.javaassignment.blog.BloggerAPI.model.BlogPostReq;
 import com.javaassignment.blog.BloggerAPI.model.BlogPostRes;

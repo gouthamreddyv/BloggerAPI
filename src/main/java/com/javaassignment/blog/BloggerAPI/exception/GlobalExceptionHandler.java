@@ -1,4 +1,4 @@
-package com.javaassignment.blog.BloggerAPI.controller;
+package com.javaassignment.blog.BloggerAPI.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
