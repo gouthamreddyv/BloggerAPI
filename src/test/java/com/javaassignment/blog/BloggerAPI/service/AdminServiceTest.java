@@ -58,9 +58,7 @@ public class AdminServiceTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        System.out.println("++++++++++++++++++++++++++"+user_list_uri);
-        System.out.println("++++++++++++++++++++++++++"+post_uri);
-    }
+     }
 
     @Test
     public void test_getAllPostsWithUser() throws APIException {
